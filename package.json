@@ -1,0 +1,27 @@
+{
+  "name": "videogular-youtube",
+  "version": "2.0.4",
+  "description": "Videogular youtube plugin",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patlux/videogular-youtube.git"
+  },
+  "keywords": [
+    "videogular",
+    "videogular-youtube",
+    "videogular-plugin"
+  ],
+  "author": "NamPNQ <nampnq@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patlux/videogular-youtube/issues"
+  },
+  "homepage": "http://nampnq.vietnamcode.info"
+}
