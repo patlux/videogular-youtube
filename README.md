@@ -5,11 +5,20 @@ Videogular `youtube` plugin repository
 
 ## Install
 
+### Bower
+
 Install [Videogular](http://www.videogular.com/) `youtube` plugin with Bower:
 
 `bower install videogular-youtube`
 
 Inside the folder `bower_components\videogular-youtube` you should find also `html` partials that you should locate in `.\views\videogular\plugins\youtube\`.
+
+### NPM
+
+Install [Videogular](http://www.videogular.com/) `youtube` plugin with npm:
+
+`npm install videogular-youtube`
+
 
 ## How to use
 Add directives, and video source to your HTML:
