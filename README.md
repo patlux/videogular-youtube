@@ -1,7 +1,7 @@
 Bower-videogular-youtube
 ========================
 
-Videogular `youtube` plugin repository for distribution on `bower`
+Videogular `youtube` plugin repository
 
 ## Install
 
