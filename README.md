@@ -68,6 +68,19 @@ angular.module("videogularApp",
 );
 ```
 
+or with `require`
+
+```js
+"use strict";
+angular.module("videogularApp",
+    [
+        // ...
+        require('videogular-youtube');
+        // ...
+    ]
+);
+```
+
 And that's all :)
 
 ### Demo
