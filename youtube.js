@@ -48,7 +48,7 @@ angular.module("info.vietnamcode.nampnq.videogular.plugins.youtube", [])
 
                         function initYoutubePlayer(url) {
                             if (ytplayer) {
-                                ytplayer.loadVideoById({
+                                ytplayer.cueVideoById({
                                     videoId: getYoutubeId(url)
                                   });
                             } else {
@@ -103,13 +103,31 @@ angular.module("info.vietnamcode.nampnq.videogular.plugins.youtube", [])
                             API.mediaElement[0].pause = function () {
                                 ytplayer.pauseVideo();
                             };
-                            function updateTime() {
-                                API.onUpdateTime({
-                                    target: API.mediaElement[0]
-                                });
-                            }
-                            updateTimer = setInterval(updateTime, 600);
+                            updateTime(); // Initial time update
                             angular.element(ytplayer.getIframe()).css({'width':'100%','height':'100%'});
+
+                            // Trigger canplay event
+                            var event = new CustomEvent("canplay");
+                            API.mediaElement[0].dispatchEvent(event);
+                        }
+
+                        function updateTime() {
+                            API.onUpdateTime({
+                                target: API.mediaElement[0]
+                            });
+                        }
+
+                        function startUpdateTimer(interval) {
+                            if (updateTimer) {
+                                stopUpdateTimer();
+                            }
+                            updateTimer = setInterval(updateTime, interval);
+                        }
+
+                        function stopUpdateTimer() {
+                            if (updateTimer) {
+                                clearInterval(updateTimer);
+                            }
                         }
 
                         function onVideoStateChange(event) {
@@ -117,19 +135,31 @@ angular.module("info.vietnamcode.nampnq.videogular.plugins.youtube", [])
 
                             switch (event.data) {
                                 case YT.PlayerState.ENDED:
+                                    stopUpdateTimer();
                                     API.onComplete();
                                 break;
 
                                 case YT.PlayerState.PLAYING:
+                                    // Trigger onStartPlaying event
+                                    var event = new CustomEvent("playing");
+                                    API.mediaElement[0].dispatchEvent(event);
                                     API.setState(VG_STATES.PLAY);
+                                    startUpdateTimer(600);
                                 break;
 
                                 case YT.PlayerState.PAUSED:
-                                    API.setState(VG_STATES.PAUSE);
+                                    // NB Videogular calls pause() on the YouTube player to actually stop a video.
+                                    // Avoid jumping from the desired "stop" status to "pause" status:
+                                    if (API.currentState == VG_STATES.PLAY) {
+                                        API.setState(VG_STATES.PAUSE);
+                                    }
+                                    stopUpdateTimer();
                                 break;
 
                                 case YT.PlayerState.BUFFERING:
-                                    //No appropriate state
+                                    // Trigger onStartBuffering event
+                                    var event = new CustomEvent("waiting");
+                                    API.mediaElement[0].dispatchEvent(event);
                                 break;
 
                                 case YT.PlayerState.CUED:
@@ -168,7 +198,7 @@ angular.module("info.vietnamcode.nampnq.videogular.plugins.youtube", [])
                             }
                         );
                         scope.$on('$destroy', function() {
-                            clearInterval(updateTimer);
+                            stopUpdateTimer();
                         });
                     }
                 };
